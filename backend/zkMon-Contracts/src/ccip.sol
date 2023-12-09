@@ -6,13 +6,13 @@ import {IRouterClient} from "@chainlink/contracts-ccip/src/v0.8/ccip/interfaces/
 import {Client} from "@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol";
 import {IERC20} from "@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.0/token/ERC20/IERC20.sol";
 import {LinkTokenInterface} from "@chainlink/contracts/src/v0.8/shared/interfaces/LinkTokenInterface.sol";
-import {PixelsContract} from "./pixel.sol"; 
+import {GameEnginezkMON} from "./GameEnginezkMON.sol"; 
 
 contract MyTokenSender is OwnerIsCreator {
     IRouterClient private myRouter;
     LinkTokenInterface private myLinkToken;
-    address private myBNMToken = 0x0E171A15233574A64a6bfD7632C479646424E585;
-    address private myPixelsContractAddress; 
+    address private monToken = 0x0E171A15233574A64a6bfD7632C479646424E585;
+    address private GameEnginezkMON; 
 
     uint64 private myBaseChainSelector = 16015286601757825753; 
 
@@ -21,21 +21,21 @@ contract MyTokenSender is OwnerIsCreator {
     constructor(address router, address link, address pixels) {
         myRouter = IRouterClient(router);
         myLinkToken = LinkTokenInterface(link);
-        myPixelsContractAddress = pixels;
+        GameEnginezkMON = pixels;
     }
 
     function sendTokens(uint256 tokenID, uint amount) external returns (bytes32 messageId) {
         Client.EVMTokenAmount[] memory tokenAmounts = new Client.EVMTokenAmount[](1);
         Client.EVMTokenAmount memory tokenAmount = Client.EVMTokenAmount({
-            token: myBNMToken,
+            token: monToken,
             amount: amount
         });
         tokenAmounts[0] = tokenAmount;
 
         Client.EVM2AnyMessage memory message = _buildCCIPMessage(
-            myPixelsContractAddress,
+            GameEnginezkMON,
             tokenID,
-            myBNMToken,
+            monToken,
             amount,
             address(myLinkToken)
         );
@@ -47,7 +47,7 @@ contract MyTokenSender is OwnerIsCreator {
         }
 
         myLinkToken.approve(address(myRouter), type(uint256).max);
-        IERC20(myBNMToken).approve(address(myRouter), type(uint256).max);
+        IERC20(monToken).approve(address(myRouter), type(uint256).max);
 
         messageId = myRouter.ccipSend(myBaseChainSelector, message);
     }
@@ -76,7 +76,7 @@ contract MyTokenSender is OwnerIsCreator {
                 data: abi.encodeWithSignature("sale_complete(uint256,address)", tokenID, msg.sender),
                 tokenAmounts: tokenAmounts,
                 extraArgs: Client._argsToBytes(
-                    Client.EVMExtraArgsV1({gasLimit: 900_000, strict: false})
+                    Client.EVMExtraArgsV1({gasLimit: 900_000})
                 ),
                 feeToken: feeTokenAddress
             });
