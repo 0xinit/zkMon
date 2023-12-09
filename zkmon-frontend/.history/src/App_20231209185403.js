@@ -23,9 +23,9 @@ const App = () => {
     gameEngine: null,
   });
   const navigate = useNavigate();
+  const [isMetaMaskConnected, setIsMetaMaskConnected] = useState(false);
   const [hasLocationPermission, setHasLocationPermission] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
-  const [address, setAddress] = useState("");
 
   const connectWallet = async () => {
     if (window.ethereum) {
@@ -43,11 +43,6 @@ const App = () => {
     } else {
       setShowConnectButton(true);
     }
-  };
-
-  const checkAddress = async () => {
-    const addr = await signer.getAddress();
-    setAddress(addr);
   };
 
   const connectContract = async (signer) => {
@@ -107,13 +102,10 @@ const App = () => {
 
   return (
     <div className="px-8 md:px-16">
-      <Navbar signer={(connectWallet, signer, address)} />
+      <Navbar />
       <div>
         <Routes>
-          <Route
-            path="/"
-            element={<HomePage checkConnections={checkConnections} />}
-          />
+          <Route path="/" element={<HomePage />} />
           <Route path="/battle" element={<Battle />} />
           <Route path="/playgame" element={<PlayGame />} />
         </Routes>

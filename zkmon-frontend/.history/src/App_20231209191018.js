@@ -35,6 +35,7 @@ const App = () => {
         await provider.send("eth_requestAccounts", []);
         const signer = provider.getSigner();
         setSigner(signer);
+        setAddress(await signer.getAddress());
         await connectContract(signer);
       } catch (error) {
         console.error(error);
@@ -43,11 +44,6 @@ const App = () => {
     } else {
       setShowConnectButton(true);
     }
-  };
-
-  const checkAddress = async () => {
-    const addr = await signer.getAddress();
-    setAddress(addr);
   };
 
   const connectContract = async (signer) => {
@@ -107,7 +103,7 @@ const App = () => {
 
   return (
     <div className="px-8 md:px-16">
-      <Navbar signer={(connectWallet, signer, address)} />
+      <Navbar signer={(connectWallet, address)} />
       <div>
         <Routes>
           <Route

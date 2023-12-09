@@ -26,7 +26,6 @@ const App = () => {
   const [hasLocationPermission, setHasLocationPermission] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [address, setAddress] = useState("");
-
   const connectWallet = async () => {
     if (window.ethereum) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -35,6 +34,8 @@ const App = () => {
         await provider.send("eth_requestAccounts", []);
         const signer = provider.getSigner();
         setSigner(signer);
+        const addr = signer.getAddress();
+        setAddress(addr);
         await connectContract(signer);
       } catch (error) {
         console.error(error);
@@ -43,11 +44,6 @@ const App = () => {
     } else {
       setShowConnectButton(true);
     }
-  };
-
-  const checkAddress = async () => {
-    const addr = await signer.getAddress();
-    setAddress(addr);
   };
 
   const connectContract = async (signer) => {
@@ -107,7 +103,7 @@ const App = () => {
 
   return (
     <div className="px-8 md:px-16">
-      <Navbar signer={(connectWallet, signer, address)} />
+      <Navbar signer={(connectWallet, signer)} />
       <div>
         <Routes>
           <Route
