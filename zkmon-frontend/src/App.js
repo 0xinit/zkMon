@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./components/NavBar";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Battle from "./pages/Battle";
 import PlayGame from "./pages/PlayGame";
 import HomePage from "./pages/HomePage";
@@ -12,10 +12,12 @@ import {
   contractAddressOfGameEngine,
   contractAbiOfGameEngine,
 } from "./contractConfig.js";
+
 import { useNavigate } from "react-router-dom";
 const { ethers } = require("ethers");
 
 const App = () => {
+  const location = useLocation();
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
   const [showConnectButton, setShowConnectButton] = useState(false);
@@ -105,7 +107,10 @@ const App = () => {
 
   return (
     <div className="px-8 md:px-16">
-      <Navbar signer={(connectWallet, signer, address)} />
+      player
+      {location.pathname !== "/playgame" && (
+        <Navbar signer={(connectWallet, signer, address)} />
+      )}
       <div>
         <Routes>
           <Route
@@ -125,8 +130,8 @@ const App = () => {
             }
           />
         </Routes>
+        {location.pathname !== "/playgame" && <Footer />}
       </div>
-      <Footer />
     </div>
   );
 };
