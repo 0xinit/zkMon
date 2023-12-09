@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import "./BattleCss/animate.css";
 import "./BattleCss/battle.css";
 import "./BattleCss/bootstrap.css";
-import TextBox from "../components/TextBox.js";
-import EnemyBox from "../components/EnemyBox.js";
-import PlayerBox from "../components/PlayerBox.js";
-import Attacks from "../components/Attacks.js";
-import PlayAgain from "../components/PlayAgain.js";
+import TextBox from "../Components/TextBox";
+import Attacks from "../Components/Attacks";
+import EnemyBox from "../Components/EnemyBox";
+import PlayerBox from "../Components/PlayerBox";
+import PlayAgain from "../Components/PlayAgain";
 
 class Battle extends Component {
   state = {

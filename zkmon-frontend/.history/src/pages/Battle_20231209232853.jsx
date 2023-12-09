@@ -4,9 +4,7 @@ import "./BattleCss/battle.css";
 import "./BattleCss/bootstrap.css";
 import TextBox from "../components/TextBox.js";
 import EnemyBox from "../components/EnemyBox.js";
-import PlayerBox from "../components/PlayerBox.js";
-import Attacks from "../components/Attacks.js";
-import PlayAgain from "../components/PlayAgain.js";
+import 
 
 class Battle extends Component {
   state = {
