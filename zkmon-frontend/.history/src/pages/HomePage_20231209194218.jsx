@@ -4,7 +4,7 @@ import Lottie from "lottie-react";
 import backgroundImage from "../assets/bg.png";
 import { Link } from "react-router-dom";
 import pokeball from "../assets/pokeball.json";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react";
 
 const Home = ({ checkConnections, signer }) => {
   const navigate = useNavigate();

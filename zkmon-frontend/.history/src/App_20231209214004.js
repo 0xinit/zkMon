@@ -68,8 +68,6 @@ const App = () => {
   const checkConnections = async () => {
     await connectWallet();
     await requestLocationPermission();
-    console.log(userLocation[0] * 10000000);
-    console.log(userLocation[1] * 10000000);
   };
 
   useEffect(() => {
@@ -88,6 +86,7 @@ const App = () => {
             position.coords.latitude,
             position.coords.longitude,
           ]);
+          console.log(userLocation[0]);
           setHasLocationPermission(true);
         },
         (error) => {

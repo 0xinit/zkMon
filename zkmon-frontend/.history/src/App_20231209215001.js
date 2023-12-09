@@ -68,8 +68,7 @@ const App = () => {
   const checkConnections = async () => {
     await connectWallet();
     await requestLocationPermission();
-    console.log(userLocation[0] * 10000000);
-    console.log(userLocation[1] * 10000000);
+    console.log(userLocation[0]);
   };
 
   useEffect(() => {

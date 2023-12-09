@@ -25,7 +25,7 @@ const App = () => {
   });
   const navigate = useNavigate();
   const [hasLocationPermission, setHasLocationPermission] = useState(false);
-  const [userLocation, setUserLocation] = useState([]);
+  const [userLocation, setUserLocation] = useState(null);
   const [address, setAddress] = useState("");
 
   const connectWallet = async () => {
@@ -68,8 +68,6 @@ const App = () => {
   const checkConnections = async () => {
     await connectWallet();
     await requestLocationPermission();
-    console.log(userLocation[0] * 10000000);
-    console.log(userLocation[1] * 10000000);
   };
 
   useEffect(() => {
@@ -116,13 +114,7 @@ const App = () => {
           <Route path="/playgame" element={<PlayGame />} />
           <Route
             path="/pickPokemons"
-            element={
-              <PickPokemon
-                signer={signer}
-                contractConfig={contractConfig}
-                userLocation={userLocation}
-              />
-            }
+            element={<PickPokemon signer={signer} />}
           />
         </Routes>
       </div>
