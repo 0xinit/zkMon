@@ -1,0 +1,4 @@
+ds-test/=lib/forge-std/lib/ds-test/src/
+forge-std/=lib/forge-std/src/
+Contract.sol/=src/AnyswapV4Router/Contract.sol/
+@openzeppelin/contracts@4.8.0=lib/openzeppelin-contracts/contracts/
