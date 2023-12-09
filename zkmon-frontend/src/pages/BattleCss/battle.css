@@ -6,7 +6,8 @@ body,
 html,
 #root {
   height: 100% !important;
-  background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
+  /* background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%); */
+  background-image: linear-gradient(to top, #7E57C2 0%, #1c1e20 100%);
 }
 
 h2 {

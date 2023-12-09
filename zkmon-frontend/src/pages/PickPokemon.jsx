@@ -1,64 +1,31 @@
-import React from "react";
-import fireImage from "../assets/PokeImages/fire.png";
-import waterImage from "../assets/PokeImages/water.png";
-import stoneImage from "../assets/PokeImages/stone.png";
-import ghostImage from "../assets/PokeImages/ghost.png";
-import windImage from "../assets/PokeImages/wind.png";
+import React from 'react';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import fireImage1 from '../assets/PokeImages/ghost.png';
+import fireImage2 from '../assets/PokeImages/water.png';
+import fireImage3 from '../assets/PokeImages/wind.png';
 
-const PickPokemon = ({ contractConfig, userLocation }) => {
+const PickPokemon = () => {
   const pokemons = [
     {
       id: 1,
-      name: "VulPix",
-      HP: 100,
-      AS: 100,
-      DS: 100,
-      Type: "fire",
-      url: fireImage,
-      ipfs_uri: "",
+      name: 'VulPix',
+      images: [fireImage1, fireImage2, fireImage3],
+      // Other Pokemon details like HP, AS, DS, Type, etc.
     },
-    {
-      id: 2,
-      name: "Suirtle",
-      HP: 100,
-      AS: 100,
-      DS: 100,
-      Type: "water",
-      url: waterImage,
-      ipfs_uri: "",
-    },
-    {
-      id: 3,
-      name: "VulPix",
-      HP: 100,
-      AS: 100,
-      DS: 100,
-      Type: "Stone",
-      url: stoneImage,
-      ipfs_uri: "",
-    },
-    {
-      id: 4,
-      name: "VulPix",
-      HP: 100,
-      AS: 100,
-      DS: 100,
-      Type: "fire",
-      url: ghostImage,
-      ipfs_uri: "",
-    },
-    {
-      id: 5,
-      name: "VulPix",
-      HP: 100,
-      AS: 100,
-      DS: 100,
-      Type: "fire",
-      url: windImage,
-      ipfs_uri: "",
-    },
+    // Other Pokemon objects with their respective image arrays
   ];
 
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 2000, // Adjust speed in milliseconds
+    autoplay: true,
+    autoplaySpeed: 3000, // Interval between slides in milliseconds
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
   const mintNft = async ([num1, num2, num3]) => {
     /*const value = await contractConfig.gameEngine(
       num1,
@@ -67,68 +34,42 @@ const PickPokemon = ({ contractConfig, userLocation }) => {
       userLocation[0],
       userLocation[1]
     );
-    
-    if(value){
-      alert("Minted pokemons");
-    }else{
-      alert("Insufficient Gas");
-    }
     */
-  };
-
+    };
   return (
-    <div className="w-full">
+    <div className="w-full flex justify-center items-center">
       <div className="p-9 h-full">
-        <p
-          className="text-[1.8rem] font-semibold text-primaryColor"
-          style={{ marginBottom: "1.5rem" }}
-        >
-          <span className="text-lightPrimary">Mint</span> Pokemon
-        </p>
-
-        <div className="h-full w-full grid md:grid-cols-4 gap-6 my-6 md:px-16">
-          {pokemons.map((pokemon) => (
-            <div
-              key={pokemon.id}
-              className="md:w-300 p-8 min-w-260 bg-cardBg backdrop-blur-md rounded-3xl flex flex-col justify-center drop-shadow-lg gap-4 hover:scale-105 transition-all duration-300"
-            >
-              <div className="flex">
-                <img
-                  src={pokemon.url}
-                  alt={pokemon.name}
-                  className="w-9 h-9 md:w-12 md:h-12 shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-110"
-                />
-                <div className="mx-3">
-                  <p className="md:text-[1rem] text-[0.8rem] font-medium hover:text-lightPrimary hover:underline">
-                    {pokemon.name}
-                  </p>
-                  <p className="md:text-[0.7rem] text-[0.6rem] text-lighttextGray">
-                    {pokemon.Type}
-                  </p>
-                </div>
-              </div>
-              <p className="text-[0.7rem] text-justify font-medium">
-                Defense Value: {pokemon.DS}
-              </p>
-              <p className="text-[0.7rem] text-justify font-medium">
-                Attack Value: {pokemon.AS}
-              </p>
-              <p className="text-[0.7rem] text-justify font-medium">
-                Health Points: {pokemon.HP}
-              </p>
-              <div className="flex justify-between pb-4 gap-3"></div>
+        {/* Loop through pokemons and create card for each */}
+        {pokemons.map((pokemon) => (
+          <div
+            key={pokemon.id}
+            className="md:w-300 p-8 min-w-260 rounded-3xl flex flex-col gap-6 hover:scale-105 transition-all duration-300"
+            style={{
+              backgroundColor: 'white'
+            }}
+          >
+            <div className="relative h-40 md:h-52">
+              <Slider {...settings}>
+                {pokemon.images.map((image, imgIndex) => (
+                  <div key={imgIndex} className="w-full">
+                    <img
+                      src={image}
+                      alt={`${pokemon.name}-${imgIndex}`}
+                      className="w-full h-full object-cover rounded-2xl"
+                    />
+                  </div>
+                ))}
+              </Slider>
             </div>
-          ))}
-        </div>
-        <div
-          className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 w-32 h-15"
-          onClick={() => mintNft([1, 2, 3])}
-        >
-          Mint NFT
-        </div>
-        <p className="md:text-[lg] text-sm text-center text-primaryColor cursor-pointer hover:text-lightModeTextColor">
-          You will get random 3 pokemon from this
-        </p>
+            {/* Button at the bottom */}
+            <div div className="flex justify-center mt-12" >
+              <button className="bg-purple-600 text-black  font-bold py-2 px-4 rounded" style={{ color: '#fff', backgroundColor: '#7E57C2' }}  onClick={() => mintNft([1, 2, 3])}>
+                Mint
+              </button>
+            </div>
+          </div>
+           
+        ))}
       </div>
     </div>
   );

@@ -65,34 +65,49 @@ const App = () => {
     });
   };
 
+  // const proceeedGame = async () => {
+  //   navigate("/pickPokemons");
+  // };
+  // const checkConnections = async () => {
+  //   await connectWallet();
+  //   await requestLocationPermission();
+  //   console.log(userLocation[0] * 10000000);
+  //   console.log(userLocation[1] * 10000000);
+  // };
   const checkConnections = async () => {
-    await connectWallet();
-    await requestLocationPermission();
-    console.log(userLocation[0] * 10000000);
-    console.log(userLocation[1] * 10000000);
-  };
-
-  useEffect(() => {
     if (window.ethereum) {
-      checkConnections();
+        await connectWallet();
+        await requestLocationPermission();
     } else {
+      // MetaMask not found
       setShowConnectButton(true);
     }
-  }, []);
+  };
+
+  // useEffect(() => {
+    // if (window.ethereum) {
+    //   checkConnections();
+    // } else {
+    //   setShowConnectButton(true);
+    // }
+  // }, []);
 
   const requestLocationPermission = () => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
+        
         (position) => {
           setUserLocation([
             position.coords.latitude,
             position.coords.longitude,
           ]);
           setHasLocationPermission(true);
+          navigate('/pickPokemons'); // Navigate to the full map page after permission is granted
         },
         (error) => {
           console.error("Error getting user location:", error);
           setHasLocationPermission(false);
+          alert("Please allow location access to play the game");
         }
       );
     } else {
@@ -100,9 +115,22 @@ const App = () => {
   };
 
   useEffect(() => {
-    connectWallet();
+    // connectWallet();
+    window.ethereum.on('accountsChanged', handleAccountsChanged);
+    return () => {
+      // Cleanup: remove the event listener
+      window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+    };
   }, []);
 
+  const handleAccountsChanged = (accounts) => {
+    if (accounts.length === 0) {
+      // MetaMask disconnected
+      // setIsMetaMaskConnected(false);
+      setHasLocationPermission(false);
+      navigate('/'); // Navigate to the full map page after permission is granted
+    }
+  };
   return (
     <div className="px-8 md:px-16">
       <Navbar signer={(connectWallet, signer, address)} />

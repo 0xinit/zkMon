@@ -9,15 +9,19 @@ import { useNavigate } from "react-router-dom";
 const Home = ({ checkConnections, signer }) => {
   const navigate = useNavigate();
   const checkAndPass = async () => {
-    if (signer) {
+    if (window.ethereum) {
       checkConnections();
     } else {
-      proceeedGame();
+        // proceeedGame();
+        // setShowConnectButton(true);
     }
+    // if (signer) {
+    //   checkConnections();
+    // } else {
+    //   // proceeedGame();
+    // }
   };
-  const proceeedGame = async () => {
-    navigate("/pickPokemons");
-  };
+  
 
   return (
     <div className="md:grid md:grid-flow-col md:gap-16 md:mt-20 justify-center">
@@ -31,13 +35,13 @@ const Home = ({ checkConnections, signer }) => {
         <p className=" opacity-75 md:pl-10 text-center md:text-left text-sm"></p>
         <button
           className=" w-[87%] md:ml-10 font-semibold bg-primaryColor p-4 px-8 text-backgroundColor rounded-lg mt-8"
-          onClick={checkAndPass}
+          onClick={checkAndPass} style={{ backgroundColor: '#7E57C2', color: 'white' }}
         >
           Start Game
         </button>
       </div>
 
-      <div className="hidden md:flex col-span-2 text-center md:text-left mt-6 md:mt-0 text-[3.5rem] md:text-[8.5rem] font-extrabold leading-tight">
+      <div className="hidden md:flex col-span-2 text-center md:text-left mt-6 md:mt-0 text-[3.5rem] md:text-[8.5rem] font-extrabold leading-tight" style={{ color: 'white' }}>
         Onchain ZKMon
       </div>
       {/* <div class="row-span-2 col-span-2">03</div> */}
