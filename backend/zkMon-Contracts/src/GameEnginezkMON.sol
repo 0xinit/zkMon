@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import {CCIPReceiver} from "@chainlink/contracts-ccip/src/v0.8/ccip/applications/CCIPReceiver.sol";
 import {Client} from "@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol";
-import {IERC20} from "@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.0/token/ERC20/IERC20.sol";
+import {IERC20} from "@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.0/contracts/token/ERC20/IERC20.sol";
 
 
 
@@ -47,7 +47,7 @@ contract GameEnginezkMON is CCIPReceiver, Ownable {
         bool isSold;
         uint256 price;
     }
-     SimpleNFT public nft;
+     SimpleMonNFT public nft;
      IERC20 public paymentToken;
 
      int256 constant x1=12979493;
@@ -63,7 +63,7 @@ contract GameEnginezkMON is CCIPReceiver, Ownable {
 
 
     constructor(address router, address _paymentTokenAddress) CCIPReceiver(router) Ownable(msg.sender) {
-        nft = new SimpleNFT();
+        nft = new SimpleMonNFT();
         paymentToken = IERC20(_paymentTokenAddress);
         nft.setBaseURI("https://gateway.pinata.cloud/ipfs/QmVT4tcmxy213iZ8qxbwh2AZ1698pV8F3a9jUtmN3ZrDFC/");
     }
