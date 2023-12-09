@@ -1,23 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-function HTMLRenderer() {
-  const [htmlContent, setHtmlContent] = useState("");
+const PokemonGame = () => {
+  const pokemonGameUrl =
+    "https://6574f129458d3730574418f6--polite-klepon-a56338.netlify.app/";
 
-  useEffect(() => {
-    const fetchHtmlFile = async () => {
-      try {
-        const response = await fetch("./game.html");
-        const html = await response.text();
-        setHtmlContent(html);
-      } catch (error) {
-        console.error("Error fetching HTML file:", error);
-      }
-    };
+  return (
+    <div>
+      <iframe
+        title="Pokemon Game"
+        src={pokemonGameUrl}
+        width="100%"
+        height="600px"
+        frameBorder="0"
+        allowFullScreen
+      ></iframe>
+    </div>
+  );
+};
 
-    fetchHtmlFile();
-  }, []);
-
-  return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
-}
-
-export default HTMLRenderer;
+export default PokemonGame;
