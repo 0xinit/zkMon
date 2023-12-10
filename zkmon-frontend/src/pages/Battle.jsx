@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import "./BattleCss/animate.css";
 import "./BattleCss/battle.css";
 import "./BattleCss/bootstrap.css";
@@ -8,8 +8,8 @@ import PlayerBox from "../components/PlayerBox.js";
 import Attacks from "../components/Attacks.js";
 import PlayAgain from "../components/PlayAgain.js";
 
-class Battle extends Component {
-  state = {
+const Battle = ({ signer }) => {
+  const [state, setState] = useState({
     playerName: "Blastoise",
     playerLevel: 45,
     playerHP: 200,
@@ -31,218 +31,167 @@ class Battle extends Component {
     textMessageOne: " ",
     textMessageTwo: "",
     gameOver: false,
-  };
+  });
 
-  componentDidMount() {
-    this.startingSequence();
-  }
+  useEffect(() => {
+    startingSequence();
+  }, []);
 
-  componentDidUpdate() {}
-
-  startingSequence = () => {
+  const startingSequence = () => {
     setTimeout(() => {
-      this.setState(
-        () => {
-          return {
-            textMessageOne: `A wild ${this.state.enemyName} appeared!`,
-            enemyFaint: false,
-          };
-        },
-        () => {
-          setTimeout(() => {
-            this.setState(
-              {
-                textMessageOne: `Go ${this.state.playerName}!`,
-                playerFaint: false,
-              },
-              () => {
-                setTimeout(() => {
-                  this.setState({
-                    textMessageOne: "",
-                  });
-                }, 3000);
-              }
-            );
-          }, 3000);
-        }
-      );
+      setState((prevState) => ({
+        ...prevState,
+        textMessageOne: `A wild ${state.enemyName} appeared!`,
+        enemyFaint: false,
+      }));
+
+      setTimeout(() => {
+        setState((prevState) => ({
+          ...prevState,
+          textMessageOne: `Go ${state.playerName}!`,
+          playerFaint: false,
+        }));
+
+        setTimeout(() => {
+          setState((prevState) => ({
+            ...prevState,
+            textMessageOne: "",
+          }));
+        }, 3000);
+      }, 3000);
     }, 1000);
   };
 
-  enemyTurn = (enemyAttackName, enemyAttackDamage) => {
+  const enemyTurn = (enemyAttackName, enemyAttackDamage) => {
     enemyAttackDamage = enemyAttackDamage + Math.floor(Math.random() * 11);
-    // first, check if enemy fainted. End Game if they did.
-    if (this.state.enemyHP === 0) {
-      this.setState(
-        {
-          textMessageOne: `${this.state.enemyName} fainted.`,
-          textMessageTwo: `${this.state.playerName} wins!`,
-          enemyFaint: true,
-        },
-        () => {
-          setTimeout(() => {
-            this.setState({
-              gameOver: true,
-            });
-          }, 3000);
-        }
-      );
-    } else {
-      // if enemy is still alive, proceed with enemy turn
 
-      this.setState(
-        (prevState) => {
-          if (prevState.playerHP - enemyAttackDamage <= 0) {
-            return {
-              playerHP: 0,
-              textMessageOne: `${this.state.enemyName} used ${enemyAttackName} for ${enemyAttackDamage} damage!`,
-            };
-          } else {
-            return {
-              playerHP: prevState.playerHP - enemyAttackDamage,
-              textMessageOne: `${this.state.enemyName} used ${enemyAttackName} for ${enemyAttackDamage} damage!`,
-            };
-          }
-        },
-        () => {
+    if (state.enemyHP === 0) {
+      setState((prevState) => ({
+        ...prevState,
+        textMessageOne: `${state.enemyName} fainted.`,
+        textMessageTwo: `${state.playerName} wins!`,
+        enemyFaint: true,
+      }));
+
+      setTimeout(() => {
+        setState((prevState) => ({
+          ...prevState,
+          gameOver: true,
+        }));
+      }, 3000);
+    } else {
+      setState((prevState) => ({
+        ...prevState,
+        textMessageOne: `${state.enemyName} used ${enemyAttackName} for ${enemyAttackDamage} damage!`,
+      }));
+
+      setTimeout(() => {
+        if (state.playerHP === 0) {
+          setState((prevState) => ({
+            ...prevState,
+            textMessageOne: `${state.playerName} fainted.`,
+            textMessageTwo: `${state.enemyName} wins!`,
+            playerFaint: true,
+          }));
+
           setTimeout(() => {
-            if (this.state.playerHP === 0) {
-              this.setState(
-                {
-                  textMessageOne: `${this.state.playerName} fainted.`,
-                  textMessageTwo: `${this.state.enemyName} wins!`,
-                  playerFaint: true,
-                },
-                () => {
-                  setTimeout(() => {
-                    this.setState({
-                      gameOver: true,
-                    });
-                  }, 3000);
-                }
-              );
-            } else {
-              this.setState({
-                textMessageOne: "",
-              });
-            }
-          }, 2000);
+            setState((prevState) => ({
+              ...prevState,
+              gameOver: true,
+            }));
+          }, 3000);
+        } else {
+          setState((prevState) => ({
+            ...prevState,
+            textMessageOne: "",
+          }));
         }
-      );
+      }, 2000);
     }
   };
 
-  handleAttackClick = (name, damage) => {
-    // implicit return single value
-    // this.setState(prevState => ({
-    //   enemyHP: prevState.enemyHP - damage
-    // }));
-
+  const handleAttackClick = (name, damage) => {
     damage = damage + Math.floor(Math.random() * 11);
 
-    // use attack to calculate enemy HP and adjust progress bar
-    this.setState(
-      (prevState) => {
-        if (prevState.enemyHP - damage <= 0) {
-          return {
-            enemyHP: 0,
-            textMessageOne: `${this.state.playerName} used ${name} for ${damage} damage!`,
-          };
-        } else {
-          return {
-            enemyHP: prevState.enemyHP - damage,
-            textMessageOne: `${this.state.playerName} used ${name} for ${damage} damage!`,
-          };
-        }
-      },
-      () => {
-        // wait X seconds before enemy attacks
-        setTimeout(() => {
-          // calc next enemy attack name and damage
-          let enemyAttack = Math.floor(Math.random() * 4);
-          let enemyAttackDamage = this.state.enemyAttackDamage[enemyAttack];
-          let enemyAttackName = this.state.enemyAttackNames[enemyAttack];
+    setState((prevState) => ({
+      ...prevState,
+      enemyHP: Math.max(prevState.enemyHP - damage, 0),
+      textMessageOne: `${state.playerName} used ${name} for ${damage} damage!`,
+    }));
 
-          // once the state is changed, start enemy turn
-          this.enemyTurn(enemyAttackName, enemyAttackDamage);
-        }, 3000);
-      }
-    );
+    setTimeout(() => {
+      let enemyAttack = Math.floor(Math.random() * 4);
+      let enemyAttackDamage = state.enemyAttackDamage[enemyAttack];
+      let enemyAttackName = state.enemyAttackNames[enemyAttack];
+
+      enemyTurn(enemyAttackName, enemyAttackDamage);
+    }, 3000);
   };
 
-  handlePlayAgain = () => {
-    console.log("play again!!!");
-    this.setState({
-      playerHP: this.state.playerMaxHP,
-      enemyHP: this.state.enemyMaxHP,
+  const handlePlayAgain = () => {
+    setState((prevState) => ({
+      ...prevState,
+      playerHP: state.playerMaxHP,
+      enemyHP: state.enemyMaxHP,
       gameOver: false,
       textMessageOne: "",
       textMessageTwo: "",
       enemyFaint: false,
       playerFaint: false,
-    });
+    }));
   };
 
-  render() {
-    return (
-      <div className="container h-100">
-        <div className="row row h-100 justify-content-center align-items-center">
-          <div className="col-sm-12">
-            {/* BATTLE SCREEN CONTAINER */}
-            <div id="battle-container" className="px-2 mx-auto">
-              <EnemyBox
-                enemyName={this.state.enemyName}
-                enemyLevel={this.state.enemyLevel}
-                enemyHP={this.state.enemyHP}
-                enemyMaxHP={this.state.enemyMaxHP}
-                enemyFaint={this.state.enemyFaint}
-              />
+  return (
+    <div className="container h-100">
+      <div className="row row h-100 justify-content-center align-items-center">
+        <div className="col-sm-12">
+          <div id="battle-container" className="px-2 mx-auto">
+            <EnemyBox
+              enemyName={state.enemyName}
+              enemyLevel={state.enemyLevel}
+              enemyHP={state.enemyHP}
+              enemyMaxHP={state.enemyMaxHP}
+              enemyFaint={state.enemyFaint}
+            />
 
-              <PlayerBox
-                playerName={this.state.playerName}
-                playerLevel={this.state.playerLevel}
-                playerHP={this.state.playerHP}
-                playerMaxHP={this.state.playerMaxHP}
-                playerFaint={this.state.playerFaint}
-              />
+            <PlayerBox
+              playerName={state.playerName}
+              playerLevel={state.playerLevel}
+              playerHP={state.playerHP}
+              playerMaxHP={state.playerMaxHP}
+              playerFaint={state.playerFaint}
+            />
 
-              {/* TEXT BOX SECTION */}
-              <div id="text-box">
-                <div id="text-box-content">
-                  {this.state.textMessageOne !== "" &&
-                    this.state.gameOver === false && (
-                      <TextBox
-                        messageOne={this.state.textMessageOne}
-                        messageTwo={this.state.textMessageTwo}
+            <div id="text-box">
+              <div id="text-box-content">
+                {state.textMessageOne !== "" && state.gameOver === false && (
+                  <TextBox
+                    messageOne={state.textMessageOne}
+                    messageTwo={state.textMessageTwo}
+                  />
+                )}
+
+                {state.textMessageOne === "" && state.gameOver === false && (
+                  <div>
+                    {Object.keys(state.playerAttacks).map((key, index) => (
+                      <Attacks
+                        key={key}
+                        index={index}
+                        details={state.playerAttacks[key]}
+                        handleAttackClick={handleAttackClick}
                       />
-                    )}
+                    ))}
+                  </div>
+                )}
 
-                  {this.state.textMessageOne === "" &&
-                    this.state.gameOver === false &&
-                    Object.keys(this.state.playerAttacks).map((key, index) => {
-                      return (
-                        <Attacks
-                          key={key}
-                          index={index}
-                          details={this.state.playerAttacks[key]}
-                          handleAttackClick={this.handleAttackClick}
-                        />
-                      );
-                    })}
-
-                  {this.state.gameOver === true && (
-                    <PlayAgain handlePlayAgain={this.handlePlayAgain} />
-                  )}
-                </div>
+                {state.gameOver === true && <PlayAgain signer={signer} />}
               </div>
-              {/* END TEXT BOX SECTION */}
             </div>
-            {/* END BATTLE SCREEN CONTAINER */}
           </div>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default Battle;
