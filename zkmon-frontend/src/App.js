@@ -5,6 +5,8 @@ import Battle from "./pages/Battle";
 import PlayGame from "./pages/PlayGame";
 import HomePage from "./pages/HomePage";
 import PickPokemon from "./pages/PickPokemon";
+import Sell from "./pages/Sell";
+import Trade from "./pages/Trade.jsx";
 import Footer from "./components/Footer";
 import {
   contractAddressOfProofOfLocation,
@@ -142,6 +144,16 @@ const App = () => {
           />
           <Route path="/battle" element={<Battle />} />
           <Route path="/playgame" element={<PlayGame />} />
+          {/* <Route path="/sell" element={<Sell />} />
+          <Route path="/trade" element={<Trade />} /> */}
+          <Route
+            path="/sell"
+            element={<Sell isConnected={!!signer} hasLocationPermission={hasLocationPermission} />}
+          />
+          <Route
+            path="/trade"
+            element={<Trade isConnected={!!signer} hasLocationPermission={hasLocationPermission} />}
+          />
           <Route
             path="/pickPokemons"
             element={
