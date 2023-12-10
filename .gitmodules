@@ -4,3 +4,6 @@
 [submodule "backend/zkMon-Contracts/lib/openzeppelin-contracts"]
 	path = backend/zkMon-Contracts/lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "backend/zkMon-Contracts/lib/ccip"]
+	path = backend/zkMon-Contracts/lib/ccip
+	url = https://github.com/smartcontractkit/ccip
