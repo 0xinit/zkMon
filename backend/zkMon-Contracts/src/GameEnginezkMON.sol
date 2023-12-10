@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import {CCIPReceiver} from "@chainlink/contracts-ccip/src/v0.8/ccip/applications/CCIPReceiver.sol";
 import {Client} from "@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol";
-import {IERC20} from "@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.0/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.0/token/ERC20/IERC20.sol";
 
 interface RandomCoordinates{
     function requestRandomWords()
@@ -52,7 +52,7 @@ contract GameEnginezkMON is CCIPReceiver, Ownable {
         uint256 price;
     }
      SimpleMonNFT public nft;
-     IERC20 public paymentToken;
+     IERC20 public bnmToken;
 
      int256 constant x1=12979493;
 
@@ -69,9 +69,9 @@ contract GameEnginezkMON is CCIPReceiver, Ownable {
     event NftMinted(uint[3] indexed tokenarray,address indexed user);
 
 
-    constructor(address router, address _paymentTokenAddress) CCIPReceiver(router) Ownable(msg.sender) {
+    constructor(address router, address _bnmToken) CCIPReceiver(router) Ownable(msg.sender) {
         nft = new SimpleMonNFT();
-        paymentToken = IERC20(_paymentTokenAddress);
+        bnmToken = IERC20(_bnmToken);
         nft.setBaseURI("https://gateway.pinata.cloud/ipfs/QmVT4tcmxy213iZ8qxbwh2AZ1698pV8F3a9jUtmN3ZrDFC/");
     }
 
@@ -90,7 +90,7 @@ contract GameEnginezkMON is CCIPReceiver, Ownable {
     function finalizeSale(uint256 tokenId, address buyer) external {
         TokenListing storage listing = tokenListings[tokenId];
         require(!listing.isSold, "Token already sold");
-        require(paymentToken.balanceOf(address(this)) >= listing.price, "Insufficient funds");
+        require(bnmToken.balanceOf(address(this)) >= listing.price, "Insufficient funds");
         nft.transferFrom(listing.seller, buyer, tokenId);
         listing.isSold = true;
         emit listing_sold(listing.seller, buyer, block.timestamp);

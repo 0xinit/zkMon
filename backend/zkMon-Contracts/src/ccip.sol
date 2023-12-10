@@ -4,14 +4,14 @@ pragma solidity ^0.8.19;
 import {OwnerIsCreator} from "@chainlink/contracts-ccip/src/v0.8/shared/access/OwnerIsCreator.sol";
 import {IRouterClient} from "@chainlink/contracts-ccip/src/v0.8/ccip/interfaces/IRouterClient.sol";
 import {Client} from "@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol";
-import {IERC20} from "@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.0/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.0/token/ERC20/IERC20.sol";
 import {LinkTokenInterface} from "@chainlink/contracts/src/v0.8/shared/interfaces/LinkTokenInterface.sol";
 import {GameEnginezkMON} from "./pixel.sol"; 
 
 contract MyTokenSender is OwnerIsCreator {
     IRouterClient private myRouter;
     LinkTokenInterface private myLinkToken;
-    address private monToken;
+    address private bnmToken;
     address private GameEnginezkMON; 
 
     uint64 private myBaseChainSelector; 
@@ -20,18 +20,18 @@ contract MyTokenSender is OwnerIsCreator {
 
     error InsufficientBalance(uint256 currentBalance, uint256 calculatedFees);
 
-    constructor(address router, address link, address pixels, address _monToken, uint64 _chainselctor) {
+    constructor(address router, address link, address pixels, address _bnmToken, uint64 _chainselctor) {
         myRouter = IRouterClient(router);
         myLinkToken = LinkTokenInterface(link);
         GameEnginezkMON = pixels;
-        monToken = _monToken;
+        bnmToken = _bnmToken;
         myBaseChainSelector = _chainselctor;
     }
 
     function sendTokens(uint256 tokenID, uint amount) external returns (bytes32 messageId) {
         Client.EVMTokenAmount[] memory tokenAmounts = new Client.EVMTokenAmount[](1);
         Client.EVMTokenAmount memory tokenAmount = Client.EVMTokenAmount({
-            token: monToken,
+            token: bnmToken,
             amount: amount
         });
         tokenAmounts[0] = tokenAmount;
@@ -39,7 +39,7 @@ contract MyTokenSender is OwnerIsCreator {
         Client.EVM2AnyMessage memory message = _buildCCIPMessage(
             GameEnginezkMON,
             tokenID,
-            monToken,
+            bnmToken,
             amount,
             address(myLinkToken)
         );
@@ -51,7 +51,7 @@ contract MyTokenSender is OwnerIsCreator {
         }
 
         myLinkToken.approve(address(myRouter), type(uint256).max);
-        IERC20(monToken).approve(address(myRouter), type(uint256).max);
+        IERC20(bnmToken).approve(address(myRouter), type(uint256).max);
 
         messageId = myRouter.ccipSend(myBaseChainSelector, message);
     }
