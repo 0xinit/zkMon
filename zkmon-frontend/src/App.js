@@ -145,14 +145,19 @@ const App = () => {
             path="/"
             element={<HomePage checkConnections={checkConnections} />}
           />
-          <Route path="/battle" element={<Battle />} />
-          <Route path="/playgame" element={<PlayGame />} />
+          <Route path="/battle" element={<Battle signer={signer} />} />
+          <Route
+            path="/playgame"
+            element={
+              <PlayGame signer={signer} contract={contractConfig.gameEngine} />
+            }
+          />
           <Route
             path="/pickPokemons"
             element={
               <PickPokemon
                 signer={signer}
-                contractConfig={contractConfig}
+                contractConfig={contractConfig.gameEngine}
                 userLocation={userLocation}
               />
             }

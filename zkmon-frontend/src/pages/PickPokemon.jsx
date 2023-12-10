@@ -1,12 +1,15 @@
-import React from 'react';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import fireImage1 from '../assets/PokeImages/ghost.png';
-import fireImage2 from '../assets/PokeImages/water.png';
-import fireImage3 from '../assets/PokeImages/wind.png';
+import React from "react";
+import fireImage from "../assets/PokeImages/fire.png";
+import waterImage from "../assets/PokeImages/water.png";
+import stoneImage from "../assets/PokeImages/stone.png";
+import ghostImage from "../assets/PokeImages/ghost.png";
+import windImage from "../assets/PokeImages/wind.png";
+import { useNavigate } from "react-router-dom";
 
-const PickPokemon = () => {
+const PickPokemon = ({ signer, contractConfig, userLocation }) => {
+  const navigate = useNavigate();
+
+
   const pokemons = [
     {
       id: 1,
@@ -27,15 +30,31 @@ const PickPokemon = () => {
     slidesToScroll: 1,
   };
   const mintNft = async ([num1, num2, num3]) => {
-    /*const value = await contractConfig.gameEngine(
-      num1,
-      num2,
-      num3,
-      userLocation[0],
-      userLocation[1]
-    );
-    */
-    };
+    try {
+      if (!contractConfig) {
+        throw new Error("Game engine contract not available.");
+      }
+
+      const value = await contractConfig.mintNFT(
+        num1,
+        num2,
+        num3,
+        userLocation[0] * 10000000,
+        userLocation[1] * 10000000
+      );
+
+      if (value) {
+        alert("Minted pokemons and you are in venue. Start the game!");
+        navigate("/playgame");
+      } else {
+        alert("Transaction failed. Please check your gas settings.");
+      }
+    } catch (error) {
+      console.error("Error minting NFT:", error);
+      alert("Error minting NFT. Please check console for details.");
+    }
+  };
+
   return (
     <div className="w-full flex justify-center items-center">
       <div className="p-9 h-full">
@@ -67,9 +86,20 @@ const PickPokemon = () => {
                 Mint
               </button>
             </div>
-          </div>
-           
-        ))}
+          ))}
+        </div>
+
+        <div
+          className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 w-32 h-15"
+          onClick={() => mintNft([1, 2, 3])}
+        >
+          Mint NFT
+        </div>
+
+        <p className="md:text-[lg] text-sm text-center text-primaryColor cursor-pointer hover:text-lightModeTextColor">
+          You will get a random set of 3 Pokémon from this selection.
+        </p>
+
       </div>
     </div>
   );
