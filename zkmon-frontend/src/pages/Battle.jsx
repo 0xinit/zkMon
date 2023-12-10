@@ -11,25 +11,7 @@ import PlayAgain from "../components/PlayAgain.js";
 const Battle = ({ signer }) => {
   const [state, setState] = useState({
     playerName: "Blastoise",
-    playerLevel: 45,
-    playerHP: 200,
-    playerMaxHP: 200,
-    playerAttacks: {
-      attackOne: { name: "Bite", damage: 10 },
-      attackTwo: { name: "Surf", damage: 30 },
-      attackThree: { name: "Water Gun", damage: 35 },
-      attackFour: { name: "Hydro Pump", damage: 45 },
-    },
-    playerFaint: "",
-    enemyName: "Gengar",
-    enemyLevel: 43,
-    enemyHP: 200,
-    enemyMaxHP: 200,
-    enemyAttackNames: ["Hex", "Shadow Ball", "Dream Eater", "Nightmare"],
-    enemyAttackDamage: [10, 30, 35, 45],
-    enemyFaint: "",
-    textMessageOne: " ",
-    textMessageTwo: "",
+    //... rest of your state
     gameOver: false,
   });
 
