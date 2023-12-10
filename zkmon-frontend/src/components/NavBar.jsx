@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { BiMenuAltRight } from "react-icons/bi";
 import { Link } from "react-router-dom";
 
@@ -9,14 +9,15 @@ const Navbar = ({ connectwallet, signer, address }) => {
     setIsMenu(!isMenu);
   };
 
-  useEffect(() => {}, []);
-
   return (
     <div>
       {/* desktop */}
-      <div className="hidden md:flex md:items-center md:justify-center">
-        <ul className="flex gap-14 bg-cardBg p-4 md:mt-8 mt-4 rounded-full px-10">
-          <Link to="/">
+      <div className="hidden md:flex md:items-center  md:justify-end" >
+        <ul className="flex gap-14 bg-cardBg  md:mt-8
+         mt-4 px-10" style={{
+           backgroundColor: '#7E57C2',
+            borderRadius: '10px',padding : '0.95rem' }}>
+          <Link to="/" style={{ color: 'white' }}>
             <li className="cursor-pointer">Home</li>
           </Link>
         </ul>

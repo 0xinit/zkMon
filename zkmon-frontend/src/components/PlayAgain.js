@@ -1,15 +1,13 @@
-import React, { Component } from "react";
+import React from "react";
 
-export class PlayAgain extends Component {
-  render() {
-    return (
-      <div className="battle-text-content">
-        <p id="play-again-text" onClick={() => this.props.handlePlayAgain()}>
-          Click Here To Play Again
-        </p>
-      </div>
-    );
-  }
-}
+const PlayAgain = ({ handlePlayAgain }) => {
+  return (
+    <div className="battle-text-content">
+      <p id="play-again-text" onClick={handlePlayAgain}>
+        Click Here To Play Again
+      </p>
+    </div>
+  );
+};
 
 export default PlayAgain;

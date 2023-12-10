@@ -1,23 +1,27 @@
-import React, { PureComponent } from "react";
+import React, { useEffect } from "react";
 import PlayerImage from "./img/hero.png";
 
-export default class EnemyAvatar extends PureComponent {
-  render() {
-    let faint = this.props.playerFaint;
-    let anim;
-    if (faint === true) {
+const EnemyAvatar = ({ playerFaint }) => {
+  useEffect(() => {
+    let anim = "";
+    if (playerFaint === true) {
       anim = "animated fadeOut slow";
-    }
-    if (faint === false) {
-      anim = "animated 	fadeInUp";
-    }
-    if (faint === "") {
+    } else if (playerFaint === false) {
+      anim = "animated fadeInUp";
+    } else {
       anim = "hide";
     }
-    return (
-      <div className={anim}>
-        <img className="avatar mx-2" src={PlayerImage} alt="" />
-      </div>
-    );
-  }
-}
+    const avatarElement = document.getElementById("player-avatar");
+    if (avatarElement) {
+      avatarElement.className = anim;
+    }
+  }, [playerFaint]);
+
+  return (
+    <div id="player-avatar" className="hide">
+      <img className="avatar mx-2" src={PlayerImage} alt="" />
+    </div>
+  );
+};
+
+export default EnemyAvatar;
