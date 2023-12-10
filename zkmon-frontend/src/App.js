@@ -129,7 +129,7 @@ const App = () => {
             element={
               <PickPokemon
                 signer={signer}
-                contractConfig={contractConfig}
+                contractConfig={contractConfig.gameEngine}
                 userLocation={userLocation}
               />
             }

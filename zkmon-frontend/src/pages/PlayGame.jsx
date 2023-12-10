@@ -11,7 +11,7 @@ const PokemonGame = ({ signer, contract }) => {
     // Function to be invoked every 3 seconds
     const repeatedFunction = async () => {
       console.log(contract);
-      if (contract && count < 1) {
+      if (contract && count === 0) {
         console.log(contract);
         await contract.updateRandomcon(
           "0x424a471A8381D805742e4A78ea36Bd43B8367623"

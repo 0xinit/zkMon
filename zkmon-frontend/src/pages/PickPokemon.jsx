@@ -4,8 +4,11 @@ import waterImage from "../assets/PokeImages/water.png";
 import stoneImage from "../assets/PokeImages/stone.png";
 import ghostImage from "../assets/PokeImages/ghost.png";
 import windImage from "../assets/PokeImages/wind.png";
+import { useNavigate } from "react-router-dom";
 
-const PickPokemon = ({ contractConfig, userLocation }) => {
+const PickPokemon = ({ signer, contractConfig, userLocation }) => {
+  const navigate = useNavigate();
+
   const pokemons = [
     {
       id: 1,
@@ -60,20 +63,29 @@ const PickPokemon = ({ contractConfig, userLocation }) => {
   ];
 
   const mintNft = async ([num1, num2, num3]) => {
-    /*const value = await contractConfig.gameEngine(
-      num1,
-      num2,
-      num3,
-      userLocation[0],
-      userLocation[1]
-    );
-    
-    if(value){
-      alert("Minted pokemons");
-    }else{
-      alert("Insufficient Gas");
+    try {
+      if (!contractConfig) {
+        throw new Error("Game engine contract not available.");
+      }
+
+      const value = await contractConfig.mintNFT(
+        num1,
+        num2,
+        num3,
+        userLocation[0] * 10000000,
+        userLocation[1] * 10000000
+      );
+
+      if (value) {
+        alert("Minted pokemons and you are in venue. Start the game!");
+        navigate("/playgame");
+      } else {
+        alert("Transaction failed. Please check your gas settings.");
+      }
+    } catch (error) {
+      console.error("Error minting NFT:", error);
+      alert("Error minting NFT. Please check console for details.");
     }
-    */
   };
 
   return (
@@ -120,14 +132,16 @@ const PickPokemon = ({ contractConfig, userLocation }) => {
             </div>
           ))}
         </div>
+
         <div
           className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 w-32 h-15"
           onClick={() => mintNft([1, 2, 3])}
         >
           Mint NFT
         </div>
+
         <p className="md:text-[lg] text-sm text-center text-primaryColor cursor-pointer hover:text-lightModeTextColor">
-          You will get random 3 pokemon from this
+          You will get a random set of 3 Pokémon from this selection.
         </p>
       </div>
     </div>
