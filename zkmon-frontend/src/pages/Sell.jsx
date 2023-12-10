@@ -1,6 +1,6 @@
-import React, { useEffect,useState } from 'react';
+import React, { useEffectuseState } from 'react';
 import { useNavigate } from "react-router-dom";
-import fireImage1 from '../assets/PokeImages/enemy_pok1-removebg-preview.png';
+import fireImage1 from '../assets/PokeImages/water.png';
 import fireImage2 from '../assets/PokeImages/stone.png';
 import fireImage3 from '../assets/PokeImages/pok2-removebg-preview.png';
 
