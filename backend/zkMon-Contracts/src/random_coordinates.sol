@@ -108,12 +108,14 @@ contract RandomCoordinates is
         return (request.paid, request.fulfilled, request.randomWords);
     }
 
-    function genEnemyCoord(uint256 _requestId) external view returns(uint256[] memory) {
-    RequestStatus memory request = s_requests[_requestId];
-    require(request.fulfilled, "request not fulfilled");
-    uint256[] memory random = request.randomWords;
+    function genEnemyCoord() external view returns(uint256[] memory) {
+    RequestStatus memory request = s_requests[lastRequestId];
 
-    uint256[] memory generatedcoord = new uint256[](10); // Initialize with size 10
+   uint256[] memory generatedcoord = new uint256[](10); // Initialize with size 10
+
+    if(request.fulfilled){
+    
+    uint256[] memory random = request.randomWords;
 
     for (uint256 i = 1; i < 10; i += 2) {
         generatedcoord[i] = (random[0] % 10); 
@@ -122,6 +124,21 @@ contract RandomCoordinates is
     for (uint256 i = 0; i < 10; i += 2) {
         generatedcoord[i] = (random[1] % 10);
     }
+    } else {
+      uint256[] memory random = new uint256[](2);
+      random[0]=uint(block.timestamp);
+      random[1]=uint(block.timestamp+1000000);
+
+
+    for (uint256 i = 1; i < 10; i += 2) {
+        generatedcoord[i] = (random[0] % 10); 
+    }
+
+    for (uint256 i = 0; i < 10; i += 2) {
+        generatedcoord[i] = (random[1] % 10);
+    }  
+    }
+    
 
     return generatedcoord;
 }

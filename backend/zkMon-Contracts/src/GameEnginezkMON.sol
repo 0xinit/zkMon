@@ -113,7 +113,8 @@ contract GameEnginezkMON is CCIPReceiver, Ownable {
     }
 
 
-    function mintNFT(uint tokenID1,uint tokenID2, uint tokenID3, int256 latitude, int256 longitude) public returns(bool){
+
+    function mintNFT(uint tokenID1,uint tokenID2, uint tokenID3, int256 latitude, int256 longitude, bool vrf) public returns(bool){
 
         int checker = getDistance(latitude,longitude);
         require((checker/10) < 201,"User outside the boundry");
@@ -123,10 +124,16 @@ contract GameEnginezkMON is CCIPReceiver, Ownable {
         nft.mintNFT(msg.sender,tokenarray[i]);
         }
         emit NftMinted(tokenarray,msg.sender);
+        
+        if(vrf){
         randomcoor.requestRandomWords();
+        }
+        
         return true;
         
     }
+
+
      
     
     function nft_address() public view returns(address){
