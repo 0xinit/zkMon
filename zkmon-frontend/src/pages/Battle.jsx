@@ -116,7 +116,13 @@ const Battle = ({ signer }) => {
     setState((prevState) => ({
       ...prevState,
       enemyHP: Math.max(prevState.enemyHP - damage, 0),
+      playerHP: Math.max(100 - damage - 10, 0),
       textMessageOne: `${state.playerName} used ${name} for ${damage} damage!`,
+      textMessageOne: `${
+        state.playerName
+      } recveived ${name} for poison attack having ${
+        100 - damage - 10
+      } damage!`,
     }));
 
     setTimeout(() => {
