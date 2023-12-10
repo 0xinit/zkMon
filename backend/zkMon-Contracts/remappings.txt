@@ -1,4 +1,5 @@
 ds-test/=lib/forge-std/lib/ds-test/src/
 forge-std/=lib/forge-std/src/
-Contract.sol/=src/AnyswapV4Router/Contract.sol/
-@openzeppelin/contracts@4.8.0=lib/openzeppelin-contracts/contracts/
+@openzeppelin/contracts=lib/openzeppelin-contracts/contracts/
+@chainlink/contracts/=node_modules/@chainlink/contracts
+@chainlink/contracts-ccip/=node_modules/@chainlink/contracts-ccip
