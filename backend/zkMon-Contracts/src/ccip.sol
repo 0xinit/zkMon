@@ -6,22 +6,26 @@ import {IRouterClient} from "@chainlink/contracts-ccip/src/v0.8/ccip/interfaces/
 import {Client} from "@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol";
 import {IERC20} from "@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.0/token/ERC20/IERC20.sol";
 import {LinkTokenInterface} from "@chainlink/contracts/src/v0.8/shared/interfaces/LinkTokenInterface.sol";
-import {GameEnginezkMON} from "./GameEnginezkMON.sol"; 
+import {GameEnginezkMON} from "./pixel.sol"; 
 
 contract MyTokenSender is OwnerIsCreator {
     IRouterClient private myRouter;
     LinkTokenInterface private myLinkToken;
-    address private monToken = 0x0E171A15233574A64a6bfD7632C479646424E585;
+    address private monToken;
     address private GameEnginezkMON; 
 
-    uint64 private myBaseChainSelector = 16015286601757825753; 
+    uint64 private myBaseChainSelector; 
+
+    //16015286601757825753
 
     error InsufficientBalance(uint256 currentBalance, uint256 calculatedFees);
 
-    constructor(address router, address link, address pixels) {
+    constructor(address router, address link, address pixels, address _monToken, uint64 _chainselctor) {
         myRouter = IRouterClient(router);
         myLinkToken = LinkTokenInterface(link);
         GameEnginezkMON = pixels;
+        monToken = _monToken;
+        myBaseChainSelector = _chainselctor;
     }
 
     function sendTokens(uint256 tokenID, uint amount) external returns (bytes32 messageId) {

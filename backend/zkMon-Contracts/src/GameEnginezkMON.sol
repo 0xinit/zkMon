@@ -7,7 +7,11 @@ import {CCIPReceiver} from "@chainlink/contracts-ccip/src/v0.8/ccip/applications
 import {Client} from "@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol";
 import {IERC20} from "@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.0/token/ERC20/IERC20.sol";
 
-
+interface RandomCoordinates{
+    function requestRandomWords()
+        external
+        returns (uint256 requestId);
+}
 
 contract SimpleMonNFT is ERC721, Ownable {
 
@@ -15,11 +19,11 @@ contract SimpleMonNFT is ERC721, Ownable {
 
 
   constructor() ERC721("SimpleMonNFT", "MFT") Ownable(msg.sender){
-    _mintInitialNFTs();
+    _mintInitialNFTs(msg.sender);
   }
 
- function mintNFT(uint256 _tokenId) public onlyOwner{
-  _safeMint(msg.sender, _tokenId); 
+ function mintNFT(address _minter,uint256 _tokenId) public {
+  _safeMint(_minter, _tokenId); 
 }
   function _baseURI() internal view virtual override returns (string memory) {
     return baseURI;
@@ -29,10 +33,10 @@ contract SimpleMonNFT is ERC721, Ownable {
     baseURI = uri;
   }
 
-  function _mintInitialNFTs() private {
+  function _mintInitialNFTs(address _minter) private {
 
     for(uint i=0; i < 10; i++) {
-      mintNFT(i); 
+      mintNFT(_minter,i); 
     }
 
   }
@@ -47,13 +51,16 @@ contract GameEnginezkMON is CCIPReceiver, Ownable {
         bool isSold;
         uint256 price;
     }
-     SimpleNFT public nft;
+     SimpleMonNFT public nft;
      IERC20 public paymentToken;
 
      int256 constant x1=12979493;
 
      int256 constant y1=77719656;
+
+     RandomCoordinates  public randomcoor;
      
+
 
     mapping(uint256 => TokenListing) public tokenListings;
 
@@ -63,9 +70,13 @@ contract GameEnginezkMON is CCIPReceiver, Ownable {
 
 
     constructor(address router, address _paymentTokenAddress) CCIPReceiver(router) Ownable(msg.sender) {
-        nft = new SimpleNFT();
+        nft = new SimpleMonNFT();
         paymentToken = IERC20(_paymentTokenAddress);
         nft.setBaseURI("https://gateway.pinata.cloud/ipfs/QmVT4tcmxy213iZ8qxbwh2AZ1698pV8F3a9jUtmN3ZrDFC/");
+    }
+
+    function updateRandomcon(address _addr) external{
+        randomcoor=RandomCoordinates(_addr);
     }
 
   function listTokenForSale(uint256 tokenId, uint256 price) external {
@@ -109,9 +120,10 @@ contract GameEnginezkMON is CCIPReceiver, Ownable {
         uint256[3] memory tokenarray=[tokenID1,tokenID2,tokenID3];
 
         for(uint i=0;i<tokenarray.length;++i){
-        nft.mintNFT(tokenarray[i]);
+        nft.mintNFT(msg.sender,tokenarray[i]);
         }
         emit NftMinted(tokenarray,msg.sender);
+        randomcoor.requestRandomWords();
         return true;
         
     }

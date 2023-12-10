@@ -27,12 +27,12 @@ contract RandomCoordinates is
     uint256[] public requestIds;
     uint256 public lastRequestId;
 
-    // Depends on the number of requested values that you want sent to the
+    // Depends on the number of requested values that you want sent to the 
     // fulfillRandomWords() function. Test and adjust
     // this limit based on the network that you select, the size of the request,
     // and the processing of the callback request in the fulfillRandomWords()
     // function.
-    uint32 callbackGasLimit = 100000;
+    uint32 callbackGasLimit = 300000;
 
     // The default is 3, but you can set this higher.
     uint16 requestConfirmations = 3;
@@ -44,24 +44,26 @@ contract RandomCoordinates is
     uint256 private nonce = 0;
 
     // Address LINK - hardcoded for Sepolia
-    address linkAddress = 0x779877A7B0D9E8603169DdbD7836e478b4624789;
+    address linkAddress;
 
     // address WRAPPER - hardcoded for Sepolia
-    address wrapperAddress = 0xab18414CD93297B0d12ac29E63Ca20f515b3DB46;
+    address wrapperAddress;
 
 
     uint256[] public generatedArray;
 
     mapping(bytes32 => bool) public expectingRequestWithIdToBeFulfilled;
 
-    constructor()
+    constructor(address _linkaddress,address _wrapperAddress)
         ConfirmedOwner(msg.sender)
-        VRFV2WrapperConsumerBase(linkAddress, wrapperAddress)
-    {}
+        VRFV2WrapperConsumerBase(_linkaddress, _wrapperAddress)
+    {
+        linkAddress=_linkaddress;
+        wrapperAddress=_wrapperAddress;
+    }
 
     function requestRandomWords()
         external
-        onlyOwner
         returns (uint256 requestId)
     {
         requestId = requestRandomness(
@@ -106,38 +108,37 @@ contract RandomCoordinates is
         return (request.paid, request.fulfilled, request.randomWords);
     }
 
-    function genEnemyCoord(uint256 _requestId) external view returns(uint256[] memory)
-    {
-        RequestStatus memory request = s_requests[_requestId];
-        require(request.fulfilled,"request not fulfilled");
-        uint256[] memory random = request.randomWords;
+    function genEnemyCoord(uint256 _requestId) external view returns(uint256[] memory) {
+    RequestStatus memory request = s_requests[_requestId];
+    require(request.fulfilled, "request not fulfilled");
+    uint256[] memory random = request.randomWords;
 
-        uint256[] memory generatedcoord;
+    uint256[] memory generatedcoord = new uint256[](10); // Initialize with size 10
 
-        for (uint256 i = 1; i < 10; i += 2) {
-           generatedcoord[i] = (random[0]-getRandomNumber(77719656) % 160) + 77719656; 
-        }
-
-        // Ensure each even-indexed number is between 2898814 and 2898973
-        for (uint256 i = 0; i < 10; i += 2) {
-            generatedcoord[i] = (random[1]-getRandomNumber(12979493) % 361) + 12979493;
-        }
-
-        return generatedcoord;
+    for (uint256 i = 1; i < 10; i += 2) {
+        generatedcoord[i] = (random[0] % 10); 
     }
+
+    for (uint256 i = 0; i < 10; i += 2) {
+        generatedcoord[i] = (random[1] % 10);
+    }
+
+    return generatedcoord;
+}
+
 
       
 
-    function getRandomNumber(uint256 max) public view returns (uint256) {
-        uint256 random = uint256(keccak256(abi.encodePacked(
-            block.timestamp,  // current block timestamp
-            block.difficulty, // current block difficulty
-            msg.sender,       // address of the caller
-            nonce             // a nonce that increments each call
-        ))) % max;
+    // function getRandomNumber(uint256 max) public view returns (uint256) {
+    //     uint256 random = uint256(keccak256(abi.encodePacked(
+    //         block.timestamp,  // current block timestamp
+    //         block.difficulty, // current block difficulty
+    //         msg.sender,       // address of the caller
+    //         nonce             // a nonce that increments each call
+    //     ))) % max;
 
-        return random;
-    }
+    //     return random;
+    // }
 
     /**
      * Allow withdraw of Link tokens from the contract
