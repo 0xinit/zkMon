@@ -118,7 +118,12 @@ const App = () => {
             element={<HomePage checkConnections={checkConnections} />}
           />
           <Route path="/battle" element={<Battle />} />
-          <Route path="/playgame" element={<PlayGame />} />
+          <Route
+            path="/playgame"
+            element={
+              <PlayGame signer={signer} contract={contractConfig.gameEngine} />
+            }
+          />
           <Route
             path="/pickPokemons"
             element={
